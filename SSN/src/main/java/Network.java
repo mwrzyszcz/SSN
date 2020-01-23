@@ -86,7 +86,6 @@ public class Network {
     return this;
   }
 
-
   @Override
   public String toString() {
     return "Network{" +
