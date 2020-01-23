@@ -1,8 +1,9 @@
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class Network {
 
-  private double LEARN_FREQUENCY = 0.8;
+  private static final double LEARN_FREQUENCY = 0.8;
   static final int INPUT_NEURONS = 2;
   static final int HIDDEN_NEURONS = 2;
   private Neuron[] neurons = new Neuron[INPUT_NEURONS + HIDDEN_NEURONS + 1];
@@ -11,7 +12,7 @@ public class Network {
     INPUT,
     HIDDEN_LAYER,
     OUTPUT
-  };
+  }
 
   public Neuron[] getNeurons() {
     return neurons;
@@ -24,30 +25,30 @@ public class Network {
     neurons[INPUT_NEURONS + HIDDEN_NEURONS] = new Neuron(TypeOfLayer.OUTPUT);
   }
 
-  public Network forwardPropagation(double input[]) {
-    double weightedSum = 0;
+  public Network forwardPropagation(double[] input) {
     for (int i = 0; i < neurons.length; i++) {
       switch (neurons[i].getTypeOfLayer()) {
         case INPUT:
           neurons[i].setOutput(input[i]);
           break;
         case HIDDEN_LAYER:
-          weightedSum =
-              neurons[i].getThreshold()
-                  + neurons[i].getWeights()[0] * neurons[0].getOutput()
-                  + neurons[i].getWeights()[1] * neurons[1].getOutput();
-          neurons[i].thresholdActivation(weightedSum);
+          calculateSum(neurons[i], 0, 1);
           break;
         case OUTPUT:
-          weightedSum =
-              neurons[i].getThreshold()
-                  + neurons[i].getWeights()[0] * neurons[2].getOutput()
-                  + neurons[i].getWeights()[1] * neurons[3].getOutput();
-          neurons[i].thresholdActivation(weightedSum);
+          calculateSum(neurons[i], 2, 3);
           break;
       }
     }
     return this;
+  }
+
+  private void calculateSum(Neuron neuron, int i2, int i3) {
+    double weightedSum;
+    weightedSum =
+        neuron.getThreshold()
+            + neuron.getWeights()[0] * neurons[i2].getOutput()
+            + neuron.getWeights()[1] * neurons[i3].getOutput();
+    neuron.activateSigmoidFunction(weightedSum);
   }
 
   public Network backPropagation(double targetXOR) {
@@ -83,5 +84,13 @@ public class Network {
               + LEARN_FREQUENCY * neurons[4].getError() * neurons[3].getOutput();
     }
     return this;
+  }
+
+
+  @Override
+  public String toString() {
+    return "Network{" +
+        "neurons=" + Arrays.toString(neurons) +
+        '}';
   }
 }

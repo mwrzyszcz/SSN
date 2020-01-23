@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Neuron {
 
   private Network.TypeOfLayer typeOfLayer;
@@ -10,7 +12,7 @@ public class Neuron {
     this.typeOfLayer = typeOfLayer;
   }
 
-  public void thresholdActivation(double weightedSum) {
+  public void activateSigmoidFunction(double weightedSum) {
     output = 1.0 / (1 + Math.exp(-1.0 * weightedSum));
   }
 
@@ -48,5 +50,16 @@ public class Neuron {
 
   public void setError(double error) {
     this.error = error;
+  }
+
+  @Override
+  public String toString() {
+    return "Neuron{" +
+        "typeOfLayer=" + typeOfLayer +
+        ", threshold=" + threshold +
+        ", weights=" + Arrays.toString(weights) +
+        ", output=" + output +
+        ", error=" + error +
+        '}';
   }
 }
